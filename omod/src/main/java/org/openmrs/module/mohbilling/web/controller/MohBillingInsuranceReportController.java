@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class MohBillingInsuranceReportController extends
         ParameterizableViewController {
@@ -30,7 +28,6 @@ public class MohBillingInsuranceReportController extends
                                                  HttpServletResponse response) throws Exception {
         ModelAndView mav = new ModelAndView();
         mav.setViewName(getViewName());
-
 
         if (request.getParameter("formStatus") != null
                 && !request.getParameter("formStatus").equals("")) {
@@ -53,79 +50,69 @@ public class MohBillingInsuranceReportController extends
             Date startDate = (Date) params[0];
             Date endDate = (Date) params[1];
 
-            Insurance insurance = InsuranceUtil.getInsurance(Integer.valueOf(request.getParameter("insuranceId")));
-            Float insuranceRate = insurance.getCurrentRate().getRate();
-            Float patientRate = 100 - insuranceRate;
-            BigDecimal insuranceFlatFee = new BigDecimal(0);
-            if (insurance.getCurrentRate().getFlatFee() != new BigDecimal(0)) {
-                insuranceFlatFee = insurance.getCurrentRate().getFlatFee();
-            }
-            insurance.getCurrentRate().getFlatFee();
-
-            BigDecimal total100 = new BigDecimal(0);
+            Insurance insurance = InsuranceUtil.getInsurance(Integer.valueOf(request.getParameter("insuranceId")));//ok
 
             // get all consommation with globalbill closed
             List<GlobalBill> globalBills = ReportsUtil.getGlobalBills(startDate, endDate, insurance);
-            List<AllServicesRevenue> listOfAllServicesRevenue = new ArrayList<>();
-
-            List<String> columns = new ArrayList<String>();
-            Consommation initialConsom = null;
+            System.out.println("Global Bill size: " + globalBills.size());
+            List<AllServicesRevenue> allServicesRevenueList = new ArrayList<>();
+            Set<String> columns = new HashSet<>();
             List<BigDecimal> totals = new ArrayList<BigDecimal>();
+            Consommation initialConsommation = null;
+            BigDecimal total100 = BigDecimal.ZERO;
 
             try {
+
                 if (startDate != null && endDate != null) {
+
                     int countGlobalBill = 1;
-                    //for (GlobalBill gb : globalBillsByInsuranceType) {
-                    for (GlobalBill gb : globalBills) {
-                        BigDecimal globalBillAmount = new BigDecimal(0);
-                        if (ReportsUtil.getConsommationByGlobalBill(gb) != null)
-                            initialConsom = ReportsUtil.getConsommationByGlobalBill(gb);
+                    for (GlobalBill aBill : globalBills) {
 
-                        List<ServiceRevenue> insuranceColumnsRevenues = new ArrayList<ServiceRevenue>();
-                        if (gb.isClosed()) {
-                            List<PatientServiceBill> gbItems = ReportsUtil.getAllItemsByGlobalBill(gb);
+                        initialConsommation = ReportsUtil.getConsommationByGlobalBill(aBill);
 
-                            List<HopService> reportColumns = GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.insuranceReportColumns");
+                        if (aBill.isClosed()) {
+
+                            List<PatientServiceBill> patientServiceBills = ReportsUtil.getAllItemsByGlobalBill(aBill);
+                            List<HopService> reportColumns = GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.insuranceReportColumns");//ok
+                            List<ServiceRevenue> serviceRevenueList = new ArrayList<ServiceRevenue>();
+
                             for (HopService hopService : reportColumns) {
-                                if (!columns.contains(hopService.getName()))
-                                    columns.add(hopService.getName());
-
-                                insuranceColumnsRevenues.add(ReportsUtil.getServiceRevenues(gbItems, hopService));
-
+                                columns.add(hopService.getName());
+                                serviceRevenueList.add(ReportsUtil.getServiceRevenues(patientServiceBills, hopService));//ok
                             }
 
-                            ServiceRevenue imagingRevenue = ReportsUtil.getServiceRevenue(gbItems, "mohbilling.IMAGING");
-                            insuranceColumnsRevenues.add(imagingRevenue);
+                            ServiceRevenue imagingRevenue = ReportsUtil.getServiceRevenue(patientServiceBills, "mohbilling.IMAGING");//ok
+                            serviceRevenueList.add(imagingRevenue);
 
-                            ServiceRevenue proceduresRevenue = ReportsUtil.getServiceRevenue(gbItems, "mohbilling.PROCEDURES");
-                            insuranceColumnsRevenues.add(proceduresRevenue);
+                            ServiceRevenue proceduresRevenue = ReportsUtil.getServiceRevenue(patientServiceBills, "mohbilling.PROCEDURES");//ok
+                            serviceRevenueList.add(proceduresRevenue);
 
-                            globalBillAmount = globalBillAmount.add(ReportsUtil.getTotalByItems(gbItems));
+                            BigDecimal globalBillAmount = ReportsUtil.getTotalByItems(patientServiceBills);
 
                             //populate asr
-                            AllServicesRevenue servicesRevenu = new AllServicesRevenue(new BigDecimal(0), new BigDecimal(0), "2016-09-11");
-                            servicesRevenu.setRevenues(insuranceColumnsRevenues);
-                            servicesRevenu.setAllDueAmounts(globalBillAmount);
-                            servicesRevenu.setConsommation(initialConsom);
-                            listOfAllServicesRevenue.add(servicesRevenu);
-                            //System.out.println("Global bill: " + countGlobalBill+" / "+globalBills.size());
+                            AllServicesRevenue servicesRevenue = new AllServicesRevenue(BigDecimal.ZERO, BigDecimal.ZERO, "2016-09-11");
+                            servicesRevenue.setRevenues(serviceRevenueList);
+                            servicesRevenue.setAllDueAmounts(globalBillAmount);
+                            servicesRevenue.setConsommation(initialConsommation);
+                            allServicesRevenueList.add(servicesRevenue);
 
-                            System.out.println("Progressssssssss: " + (countGlobalBill * 100) / globalBills.size() + "%");
-                            //log.info("Global bill: " + countGlobalBill+" / "+globalBills.size());
+                            System.out.println("GlobalBill count Progress....: " + (countGlobalBill * 100) / globalBills.size() + "%");
                         }
                         countGlobalBill++;
                     }
                 }
+
                 List<PatientServiceBill> allItems = ReportsUtil.getBillItemsByAllGlobalBills(globalBills);
                 for (String category : columns) {
-                    totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, category));
-                    total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, category));
+                    totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, category));//ok
+                    total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, category));//ok
                 }
-                totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.IMAGING")));
-                totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.PROCEDURES")));
 
-                total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.IMAGING")));
-                total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.PROCEDURES")));
+                totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.IMAGING")));//ok
+                totals.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.PROCEDURES")));//ok
+
+                total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.IMAGING")));//ok
+                total100 = total100.add(ReportsUtil.getTotalByCategorizedItems(allItems, GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.PROCEDURES")));//ok
 
             } catch (Exception e) {
                 request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
@@ -133,26 +120,33 @@ public class MohBillingInsuranceReportController extends
                 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + e.getMessage());
             }
 
-            if (!columns.contains("IMAGING"))
+            if (!columns.contains("IMAGING")) {
                 columns.add("IMAGING");
-            if (!columns.contains("PROCEDURES"))
+            }
+            if (!columns.contains("PROCEDURES")) {
                 columns.add("PROCED.");
+            }
 
             request.getSession().setAttribute("columns", columns);
-            request.getSession().setAttribute("listOfAllServicesRevenue", listOfAllServicesRevenue);
+            request.getSession().setAttribute("listOfAllServicesRevenue", allServicesRevenueList);
             request.getSession().setAttribute("insurance", insurance);
+
+            BigDecimal insuranceFlatFee = BigDecimal.ZERO;
+            if (insurance.getCurrentRate().getFlatFee().compareTo(BigDecimal.ZERO) != 0) {
+                insuranceFlatFee = insurance.getCurrentRate().getFlatFee();
+            }
 
             mav.addObject("columns", columns);
             mav.addObject("totals", totals);
-            mav.addObject("listOfAllServicesRevenue", listOfAllServicesRevenue);
+            mav.addObject("listOfAllServicesRevenue", allServicesRevenueList);
             mav.addObject("resultMsg", "[" + insurance.getName() + "] Bill from " + startDateStr + " To " + endDateStr);
             mav.addObject("insuranceFlatFee", insuranceFlatFee);
 
-            mav.addObject("insuranceRate", insuranceRate);
+            mav.addObject("insuranceRate", insurance.getCurrentRate().getRate());
             mav.addObject("total100", total100);
 
         }
-        mav.addObject("insurances", InsuranceUtil.getAllInsurances());
+        mav.addObject("insurances", InsuranceUtil.getAllInsurances());//todo:nok
 
         if (request.getParameter("export") != null) {
             List<String> columns = (List<String>) request.getSession().getAttribute("columns");

@@ -97,21 +97,13 @@ dimensions/dim_paid_service_bill/sp_mamba_dim_paid_service_bill_update.sql
 dimensions/dim_paid_service_bill/sp_mamba_dim_paid_service_bill.sql
 
 #############################################################################
-##################### HTS/HIV Fact Encounter Table SPs  #####################
+############## Denormalised Insurance Reporting Table SPs  ##################
 #############################################################################
-#facts/fact_hts/sp_mamba_fact_encounter_hts_create.sql
-#facts/fact_hts/sp_mamba_fact_encounter_hts_insert.sql
-#facts/fact_hts/sp_mamba_fact_encounter_hts_update.sql
-#facts/fact_hts/sp_mamba_fact_encounter_hts.sql
-
-#############################################################################
-##################### HTS/HIV Fact TX_CURR Table SPs  #####################
-#############################################################################
-#facts/fact_txcurr/sp_mamba_fact_txcurr_create.sql
-#facts/fact_txcurr/sp_mamba_fact_txcurr_insert.sql
-#facts/fact_txcurr/sp_mamba_fact_txcurr_update.sql
-#facts/fact_txcurr/sp_mamba_fact_txcurr.sql
-#facts/fact_txcurr/sp_mamba_fact_txcurr_query.sql
+facts/fact_insurance/sp_mamba_fact_insurance_create.sql
+facts/fact_insurance/sp_mamba_fact_insurance_insert.sql
+facts/fact_insurance/sp_mamba_fact_insurance_update.sql
+facts/fact_insurance/sp_mamba_fact_insurance.sql
+facts/fact_insurance/sp_mamba_fact_insurance_query.sql
 
 #############################################################################
 ###### A single stored procedure that invokes (CALLs) the above SPs #########

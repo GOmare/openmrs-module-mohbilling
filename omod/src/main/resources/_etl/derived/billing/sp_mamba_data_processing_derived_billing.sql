@@ -1,4 +1,6 @@
 -- $BEGIN
+
+# Dimensions
 CALL sp_mamba_dim_thirdparty;
 CALL sp_mamba_dim_department;
 CALL sp_mamba_dim_hop_service;
@@ -18,5 +20,7 @@ CALL sp_mamba_dim_consommation;
 CALL sp_mamba_dim_patient_service_bill;
 CALL sp_mamba_dim_bill_payment;
 CALL sp_mamba_dim_paid_service_bill;
-#CALL sp_mamba_fact_encounter_hts;
+
+#Facts
+#CALL sp_mamba_fact_insurance;
 -- $END

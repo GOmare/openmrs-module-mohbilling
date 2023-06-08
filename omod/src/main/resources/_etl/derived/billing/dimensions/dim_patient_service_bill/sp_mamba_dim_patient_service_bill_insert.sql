@@ -13,6 +13,7 @@ INSERT INTO mamba_dim_patient_service_bill (patient_service_bill_id,
                                             is_paid,
                                             drug_frequency,
                                             item_type,
+                                            voided,
                                             created_date)
 
 SELECT patient_service_bill_id,
@@ -28,6 +29,7 @@ SELECT patient_service_bill_id,
        is_paid,
        drug_frequency,
        item_type,
+       voided,
        created_date
 FROM moh_bill_patient_service_bill;
 
