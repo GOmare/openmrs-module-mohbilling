@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS mamba_dim_patient_service_bill
     is_paid                   smallint       not null,
     drug_frequency            varchar(150)   null,
     item_type                 tinyint(1)     null,
-    created_date              datetime       not null,
+    created_date              datetime       null,
 
     PRIMARY KEY (id)
 )
@@ -26,9 +26,6 @@ CREATE INDEX mamba_dim_patient_service_bill_patient_service_bill_id_index
 
 CREATE INDEX mamba_dim_patient_service_bill_consommation_id_index
     ON mamba_dim_patient_service_bill (consommation_id);
-
-CREATE INDEX mamba_dim_patient_service_bill_billable_service_id_index
-    ON mamba_dim_patient_service_bill (billable_service_id);
 
 CREATE INDEX mamba_dim_patient_service_bill_billable_service_id_index
     ON mamba_dim_patient_service_bill (billable_service_id);

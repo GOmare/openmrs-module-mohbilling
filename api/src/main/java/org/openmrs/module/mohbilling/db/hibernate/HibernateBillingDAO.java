@@ -1415,11 +1415,11 @@ public class HibernateBillingDAO implements BillingDAO {
         return crit.list();
     }
 
-    @Override
-    public List<GlobalBill> getGlobalBills(Date date1, Date date2, Insurance insurance) {
-
-
-    }
+//    @Override
+//    public List<GlobalBill> getGlobalBills(Date date1, Date date2, Insurance insurance) {
+//
+//
+//    }
 
     @Override
     public List<GlobalBill> getGlobalBills() {

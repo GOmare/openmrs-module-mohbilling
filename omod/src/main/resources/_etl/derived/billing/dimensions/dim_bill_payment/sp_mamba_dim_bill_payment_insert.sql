@@ -1,6 +1,6 @@
 -- $BEGIN
 
-INSERT INTO mamba_dim_department (dbill_payment_id,
+INSERT INTO mamba_dim_bill_payment (bill_payment_id,
                                   patient_bill_id,
                                   amount_paid,
                                   date_received,

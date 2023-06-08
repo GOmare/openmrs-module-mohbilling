@@ -25,8 +25,8 @@ SELECT patient_service_bill_id,
        paid_quantity,
        service_other,
        service_other_description,
-       is_paid
-           drug_frequency,
+       is_paid,
+       drug_frequency,
        item_type,
        created_date
 FROM moh_bill_patient_service_bill;

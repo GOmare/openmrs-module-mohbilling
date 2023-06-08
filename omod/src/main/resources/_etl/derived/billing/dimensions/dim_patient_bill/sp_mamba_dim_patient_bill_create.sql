@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS mamba_dim_patient_bill
     amount          decimal(20, 2) not null,
     is_paid         smallint       null,
     status          varchar(150)   null,
-    created_date    datetime       not null,
+    created_date    datetime       null,
 
     PRIMARY KEY (id)
 )

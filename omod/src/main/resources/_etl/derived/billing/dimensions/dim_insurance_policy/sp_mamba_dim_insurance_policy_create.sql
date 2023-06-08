@@ -34,9 +34,6 @@ CREATE INDEX mamba_dim_insurance_policy_coverage_start_date_index
 CREATE INDEX mamba_dim_insurance_policy_expiration_date_index
     ON mamba_dim_insurance_policy (expiration_date);
 
-CREATE INDEX mamba_dim_insurance_policy_expiration_date_index
-    ON mamba_dim_insurance_policy (expiration_date);
-
 CREATE INDEX mamba_dim_insurance_policy_insurance_id_index
     ON mamba_dim_insurance_policy (insurance_id);
 
