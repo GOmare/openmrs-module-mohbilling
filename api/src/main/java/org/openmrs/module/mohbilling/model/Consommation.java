@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.openmrs.module.mohbilling.model;
 
@@ -12,267 +12,256 @@ import java.util.TreeSet;
 
 /**
  * @author emr
- * 
  */
-public class
-Consommation {
+public class Consommation {
 
-	private Integer consommationId;
-	
-	private Department department;
+    private Integer consommationId;
 
-	private Beneficiary beneficiary;
+    private Department department;
 
-	private Set<PatientServiceBill> billItems;
+    private Beneficiary beneficiary;
 
-	private PatientBill patientBill;
+    private Set<PatientServiceBill> billItems;
 
-	private InsuranceBill insuranceBill;
+    private PatientBill patientBill;
 
-	private ThirdPartyBill thirdPartyBill;
+    private InsuranceBill insuranceBill;
 
-	private GlobalBill globalBill;
+    private ThirdPartyBill thirdPartyBill;
 
-	private User creator;
+    private GlobalBill globalBill;
 
-	private Date createdDate;
+    private User creator;
 
-	private boolean voided = false;
+    private Date createdDate;
 
-	private User voidedBy;
+    private boolean voided = false;
 
-	private Date voidedDate;
+    private User voidedBy;
 
-	private String voidReason;
-	
-	public Consommation(){
-		
-	}
-	
-	public Consommation(GlobalBill gb,Beneficiary ben,Date createDate,User creator, Boolean voided){
-		this.globalBill=gb;
-		this.beneficiary=ben;
-		this.createdDate=createDate;
-		this.creator=creator;
-		this.voided=voided;
-	}
+    private Date voidedDate;
 
-	/**
-	 * @return the consommationId
-	 */
-	public Integer getConsommationId() {
-		return consommationId;
-	}
+    private String voidReason;
 
-	/**
-	 * @param consommationId
-	 *            the consommationId to set
-	 */
-	public void setConsommationId(Integer consommationId) {
-		this.consommationId = consommationId;
-	}
+    public Consommation() {
 
-	/**
-	 * @return the billItems
-	 */
-	public Set<PatientServiceBill> getBillItems() {
-		return billItems;
-	}
+    }
 
-	/**
-	 * @param billItems
-	 *            the billItems to set
-	 */
-	public void setBillItems(Set<PatientServiceBill> billItems) {
-		this.billItems = billItems;
-	}
+    public Consommation(GlobalBill gb, Beneficiary ben, Date createDate, User creator, Boolean voided) {
+        this.globalBill = gb;
+        this.beneficiary = ben;
+        this.createdDate = createDate;
+        this.creator = creator;
+        this.voided = voided;
+    }
 
-	/**
-	 * @return the globalBill
-	 */
-	public GlobalBill getGlobalBill() {
-		return globalBill;
-	}
+    /**
+     * @return the consommationId
+     */
+    public Integer getConsommationId() {
+        return consommationId;
+    }
 
-	/**
-	 * @param globalBill
-	 *            the globalBill to set
-	 */
-	public void setGlobalBill(GlobalBill globalBill) {
-		this.globalBill = globalBill;
-	}
+    /**
+     * @param consommationId the consommationId to set
+     */
+    public void setConsommationId(Integer consommationId) {
+        this.consommationId = consommationId;
+    }
 
-	/**
-	 * @return the bill
-	 */
-	public PatientBill getPatientBill() {
-		return patientBill;
-	}
+    /**
+     * @return the billItems
+     */
+    public Set<PatientServiceBill> getBillItems() {
+        return billItems;
+    }
 
-	/**
-	 * @return the department
-	 */
-	public Department getDepartment() {
-		return department;
-	}
+    /**
+     * @param billItems the billItems to set
+     */
+    public void setBillItems(Set<PatientServiceBill> billItems) {
+        this.billItems = billItems;
+    }
 
-	/**
-	 * @param department the department to set
-	 */
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
+    /**
+     * @return the globalBill
+     */
+    public GlobalBill getGlobalBill() {
+        return globalBill;
+    }
 
-	/**
-	 * @param patientBill
-	 *            the bill to set
-	 */
-	public void setPatientBill(PatientBill patientBill) {
-		this.patientBill = patientBill;
-	}
+    /**
+     * @param globalBill the globalBill to set
+     */
+    public void setGlobalBill(GlobalBill globalBill) {
+        this.globalBill = globalBill;
+    }
 
-	/**
-	 * @return the insuranceBill
-	 */
-	public InsuranceBill getInsuranceBill() {
-		return insuranceBill;
-	}
+    /**
+     * @return the bill
+     */
+    public PatientBill getPatientBill() {
+        return patientBill;
+    }
 
-	/**
-	 * @param insuranceBill
-	 *            the insuranceBill to set
-	 */
-	public void setInsuranceBill(InsuranceBill insuranceBill) {
-		this.insuranceBill = insuranceBill;
-	}
+    /**
+     * @return the department
+     */
+    public Department getDepartment() {
+        return department;
+    }
 
-	/**
-	 * @return the thirdPartyBill
-	 */
-	public ThirdPartyBill getThirdPartyBill() {
-		return thirdPartyBill;
-	}
+    /**
+     * @param department the department to set
+     */
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
-	/**
-	 * @param thirdPartyBill
-	 *            the thirdPartyBill to set
-	 */
-	public void setThirdPartyBill(ThirdPartyBill thirdPartyBill) {
-		this.thirdPartyBill = thirdPartyBill;
-	}
+    /**
+     * @param patientBill the bill to set
+     */
+    public void setPatientBill(PatientBill patientBill) {
+        this.patientBill = patientBill;
+    }
+
+    /**
+     * @return the insuranceBill
+     */
+    public InsuranceBill getInsuranceBill() {
+        return insuranceBill;
+    }
+
+    /**
+     * @param insuranceBill the insuranceBill to set
+     */
+    public void setInsuranceBill(InsuranceBill insuranceBill) {
+        this.insuranceBill = insuranceBill;
+    }
+
+    /**
+     * @return the thirdPartyBill
+     */
+    public ThirdPartyBill getThirdPartyBill() {
+        return thirdPartyBill;
+    }
+
+    /**
+     * @param thirdPartyBill the thirdPartyBill to set
+     */
+    public void setThirdPartyBill(ThirdPartyBill thirdPartyBill) {
+        this.thirdPartyBill = thirdPartyBill;
+    }
 
 
-	/**
-	 * @return the beneficiary
-	 */
-	public Beneficiary getBeneficiary() {
-		return beneficiary;
-	}
+    /**
+     * @return the beneficiary
+     */
+    public Beneficiary getBeneficiary() {
+        return beneficiary;
+    }
 
-	/**
-	 * @param beneficiary
-	 *            the beneficiary to set
-	 */
-	public void setBeneficiary(Beneficiary beneficiary) {
-		this.beneficiary = beneficiary;
-	}
+    /**
+     * @param beneficiary the beneficiary to set
+     */
+    public void setBeneficiary(Beneficiary beneficiary) {
+        this.beneficiary = beneficiary;
+    }
 
-	/**
-	 * @return the creator
-	 */
-	public User getCreator() {
-		return creator;
-	}
+    /**
+     * @return the creator
+     */
+    public User getCreator() {
+        return creator;
+    }
 
-	/**
-	 * @param creator
-	 *            the creator to set
-	 */
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    /**
+     * @param creator the creator to set
+     */
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
-	/**
-	 * @return the createdDate
-	 */
-	public Date getCreatedDate() {
-		return createdDate;
-	}
+    /**
+     * @return the createdDate
+     */
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	/**
-	 * @param createdDate
-	 *            the createdDate to set
-	 */
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+    /**
+     * @param createdDate the createdDate to set
+     */
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	/**
-	 * @param voided
-	 *            the voided to set
-	 */
-	public void setVoided(boolean voided) {
-		this.voided = voided;
-	}
+    /**
+     * @param voided the voided to set
+     */
+    public void setVoided(boolean voided) {
+        this.voided = voided;
+    }
 
-	/**
-	 * @return the voidedBy
-	 */
-	public User getVoidedBy() {
-		return voidedBy;
-	}
+    /**
+     * @return the voidedBy
+     */
+    public User getVoidedBy() {
+        return voidedBy;
+    }
 
-	public Boolean getVoided(){return voided;}
-	/**
-	 * @param voidedBy
-	 *            the voidedBy to set
-	 */
-	public void setVoidedBy(User voidedBy) {
-		this.voidedBy = voidedBy;
-	}
+    public Boolean getVoided() {
+        return voided;
+    }
 
-	/**
-	 * @return the voidedDate
-	 */
-	public Date getVoidedDate() {
-		return voidedDate;
-	}
+    /**
+     * @param voidedBy the voidedBy to set
+     */
+    public void setVoidedBy(User voidedBy) {
+        this.voidedBy = voidedBy;
+    }
 
-	/**
-	 * @param voidedDate
-	 *            the voidedDate to set
-	 */
-	public void setVoidedDate(Date voidedDate) {
-		this.voidedDate = voidedDate;
-	}
+    /**
+     * @return the voidedDate
+     */
+    public Date getVoidedDate() {
+        return voidedDate;
+    }
 
-	/**
-	 * @return the voidReason
-	 */
-	public String getVoidReason() {
-		return voidReason;
-	}
-	/**
-	 * @param voidReason
-	 *            the voidReason to set
-	 */
-	public void setVoidReason(String voidReason) {
-		this.voidReason = voidReason;
-	}
+    /**
+     * @param voidedDate the voidedDate to set
+     */
+    public void setVoidedDate(Date voidedDate) {
+        this.voidedDate = voidedDate;
+    }
 
-	/**
-	 * Add the given psb to the given list of bill items for this Consommation
-	 */
-	public void addBillItem(PatientServiceBill psb) {
-		// TODO Auto-generated method stub
+    /**
+     * @return the voidReason
+     */
+    public String getVoidReason() {
+        return voidReason;
+    }
 
-		if (billItems == null)
-			billItems = new TreeSet<PatientServiceBill>();
-		if (psb != null) {
-			psb.setConsommation(this);
-			billItems.add(psb);
-		}
+    /**
+     * @param voidReason the voidReason to set
+     */
+    public void setVoidReason(String voidReason) {
+        this.voidReason = voidReason;
+    }
 
-	}
+    /**
+     * Add the given psb to the given list of bill items for this Consommation
+     */
+    public void addBillItem(PatientServiceBill psb) {
+        // TODO Auto-generated method stub
+
+        if (billItems == null)
+            billItems = new TreeSet<PatientServiceBill>();
+        if (psb != null) {
+            psb.setConsommation(this);
+            billItems.add(psb);
+        }
+
+    }
 
 }

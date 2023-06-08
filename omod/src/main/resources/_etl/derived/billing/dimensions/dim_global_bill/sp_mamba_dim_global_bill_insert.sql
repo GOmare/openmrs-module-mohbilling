@@ -1,0 +1,29 @@
+-- $BEGIN
+
+INSERT INTO mamba_dim_global_bill (global_bill_id,
+                                   admission_id,
+                                   insurance_id,
+                                   bill_identifier,
+                                   global_amount,
+                                   closing_date,
+                                   closed,
+                                   closed_by,
+                                   closed_reason,
+                                   edited_by,
+                                   edit_reason,
+                                   created_date)
+SELECT global_bill_id,
+       admission_id,
+       insurance_id,
+       bill_identifier,
+       global_amount,
+       closing_date,
+       closed,
+       closed_by,
+       closed_reason,
+       edited_by,
+       edit_reason,
+       created_date
+FROM moh_bill_global_bill;
+
+-- $END

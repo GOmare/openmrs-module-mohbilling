@@ -18,7 +18,13 @@ CREATE TABLE IF NOT EXISTS mamba_dim_service_category
 CREATE INDEX mamba_dim_service_category_service_category_id_index
     ON mamba_dim_service_category (service_category_id);
 
-CREATE INDEX mamba_dim_service_category_service_category_id_index
-    ON mamba_dim_service_category (service_category_id);
+CREATE INDEX mamba_dim_service_category_insurance_id_index
+    ON mamba_dim_service_category (insurance_id);
+
+CREATE INDEX mamba_dim_service_category_department_id_index
+    ON mamba_dim_service_category (department_id);
+
+CREATE INDEX mamba_dim_service_category_service_id_index
+    ON mamba_dim_service_category (service_id);
 
 -- $END
