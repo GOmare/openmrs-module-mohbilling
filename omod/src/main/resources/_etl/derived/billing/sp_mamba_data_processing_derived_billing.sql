@@ -22,5 +22,5 @@ CALL sp_mamba_dim_bill_payment;
 CALL sp_mamba_dim_paid_service_bill;
 
 #Facts
-#CALL sp_mamba_fact_insurance;
+CALL sp_mamba_fact_insurance;
 -- $END

@@ -23,6 +23,7 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.User;
@@ -35,25 +36,28 @@ import org.openmrs.module.mohbilling.service.BillingService;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 /**
  * @author EMR@RBC
- *
  */
 @SuppressWarnings("unchecked")
 public class HibernateBillingDAO implements BillingDAO {
 
-    /** Logger for this class and subclasses */
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * Logger for this class and subclasses
+     */
     protected final Log log = LogFactory.getLog(getClass());
 
     private SessionFactory sessionFactory;
 
     /**
-     * @param sessionFactory
-     *            the sessionFactory to set
+     * @param sessionFactory the sessionFactory to set
      */
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -70,7 +74,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#getInsurance(org.openmrs .
-     *      module.mohbilling.model.Insurance)
+     * module.mohbilling.model.Insurance)
      */
     @Override
     public Insurance getInsurance(Integer insuranceId) {
@@ -124,7 +128,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#getBillableServiceByConcept(Concept
-     *      concept, Insurance insurance)
+     * concept, Insurance insurance)
      */
     @Override
     public BillableService getBillableServiceByConcept(
@@ -150,7 +154,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#getPatientBill(org.openmrs
-     *      .module.mohbilling.model.PatientBill)
+     * .module.mohbilling.model.PatientBill)
      */
     @Override
     public PatientBill getPatientBill(Integer billId) {
@@ -163,7 +167,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#getPatientBill(org.openmrs
-     *      .module.mohbilling.model.PatientBill)
+     * .module.mohbilling.model.PatientBill)
      */
     @Override
     public ThirdParty getThirdParty(Integer thirdPartyId) {
@@ -176,7 +180,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#saveThirdParty(org.openmrs
-     *      .module.mohbilling.model.ThirdParty)
+     * .module.mohbilling.model.ThirdParty)
      */
     @Override
     public void saveThirdParty(ThirdParty thirdParty) {
@@ -188,7 +192,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#saveInsurance(org.openmrs
-     *      .module.mohbilling.model.Insurance)
+     * .module.mohbilling.model.Insurance)
      */
     @Override
     public void saveInsurance(Insurance insurance) {
@@ -200,7 +204,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#saveInsurancePolicy(org.openmrs
-     *      .module.mohbilling.model.InsurancePolicy)
+     * .module.mohbilling.model.InsurancePolicy)
      */
     @Override
     public void saveInsurancePolicy(InsurancePolicy card) {
@@ -213,7 +217,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#savePatientBill(org.openmrs
-     *      .module.mohbilling.model.PatientBill)
+     * .module.mohbilling.model.PatientBill)
      */
     @Override
     public void savePatientBill(PatientBill bill) {
@@ -364,7 +368,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#buildCohort(org.openmrs.module.mohbilling.model.Insurance,
-     *      Date, Date, Integer, String)
+     * Date, Date, Integer, String)
      */
     @Override
     public List<PatientBill> billCohortBuilder(Insurance insurance,
@@ -685,7 +689,7 @@ public class HibernateBillingDAO implements BillingDAO {
      * (non-Javadoc)
      *
      * @see org.openmrs.module.mohbilling.db.BillingDAO#getBillableServiceByConcept(Concept
-     *      concept, Insurance insurance)
+     * concept, Insurance insurance)
      */
     @Override
     public ServiceCategory getServiceCategoryByName(String name,
@@ -1413,12 +1417,209 @@ public class HibernateBillingDAO implements BillingDAO {
                 .add(Restrictions.eq("insurance", insurance))
                 .addOrder(Order.asc("closingDate"));
         return crit.list();
-    }
+}
 
 //    @Override
 //    public List<GlobalBill> getGlobalBills(Date date1, Date date2, Insurance insurance) {
 //
+//        SQLQuery insuranceReport = sessionFactory.getCurrentSession()
+//                .createSQLQuery("CALL sp_mamba_fact_insurance_query(:START_DATE, :END_DATE, :INSURANCE_ID)");
 //
+//        insuranceReport.setParameter("START_DATE", date1);
+//        insuranceReport.setParameter("END_DATE", date2);
+//        insuranceReport.setParameter("START_DATE", insurance.getInsuranceId());
+//
+//        insuranceReport.addScalar("patient_service_bill_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("consommation_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("billable_service_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("service_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("service_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("unit_price", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("quantity", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("paid_quantity", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("service_other", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("service_other_description", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("is_paid", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("drug_frequency", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("item_type", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("voided", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("global_bill_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("department_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("beneficiary_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("patient_bill_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("insurance_bill_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("third_party_bill_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("admission_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("insurance_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("bill_identifier", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("global_amount", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("closing_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("closed", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("closed_by", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("closed_reason", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("edited_by", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("edit_reason", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("global_bill_creation_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("department_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("facility_service_price_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("service_category_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("maxima_to_pay", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("start_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("end_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("beneficary_patient_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("insurance_policy_id", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("policy_id_number", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("creator", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("owner_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("owner_code", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("level", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("company", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("patient_bill_amount", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("is_patient_bill_paid", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("status", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_bill_amount", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("third_party_bill_amount", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("third_party_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("insurance_card_no", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_policy_owner", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("coverage_start_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("expiration_date", StandardBasicTypes.DATE);
+//        insuranceReport.addScalar("insurance_company_concept", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_category", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_company_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_company_address", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("insurance_company_phone", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("owner_patient_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("third_party_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("third_party_rate", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("service_category_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("service_category_price", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("facility_location_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("facility_concept_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("facility_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("facility_full_price", StandardBasicTypes.DOUBLE);
+//        insuranceReport.addScalar("beneficiary_patient_id", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("beneficiary_family_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("beneficiary_middle_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("beneficiary_given_name", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("beneficiary_birth_date", StandardBasicTypes.STRING);
+//        insuranceReport.addScalar("beneficiary_birth_date_estimated", StandardBasicTypes.INTEGER);
+//        insuranceReport.addScalar("beneficiary_gender", StandardBasicTypes.STRING);
+//
+//        List<GlobalBill> globalBills = new ArrayList<>();
+//
+//        List<Object[]> resultSet = insuranceReport.list();
+//        for (Object[] objects : resultSet) {
+//
+//            Integer patientServiceBillId = (objects[0] != null) ? Integer.parseInt(objects[0].toString()) : null;
+//            Integer consommationId = (objects[1] != null) ? Integer.parseInt(objects[1].toString()) : null;
+//            Integer billableServiceId = (objects[2] != null) ? Integer.parseInt(objects[2].toString()) : null;
+//            Integer serviceId = (objects[3] != null) ? Integer.parseInt(objects[3].toString()) : null;
+//            Date serviceDate = null;
+//            try {
+//                serviceDate = (objects[4] != null) ? dateFormat.parse(objects[4].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            Double unitPrice = (objects[5] != null) ? Double.parseDouble(objects[5].toString()) : null;
+//            Double quantity = (objects[6] != null) ? Double.parseDouble(objects[6].toString()) : null;
+//            Double paidQuantity = (objects[7] != null) ? Double.parseDouble(objects[7].toString()) : null;
+//            String service_other = (objects[8] != null) ? objects[8].toString() : null;
+//            String serviceOtherDescription = (objects[9] != null) ? objects[9].toString() : null;
+//            Integer isPaid = (objects[10] != null) ? Integer.parseInt(objects[10].toString()) : null;
+//            String drugFrequency = (objects[11] != null) ? objects[11].toString() : null;
+//            Integer itemType = (objects[12] != null) ? Integer.parseInt(objects[12].toString()) : null;
+//            Integer voided = (objects[13] != null) ? Integer.parseInt(objects[13].toString()) : null;
+//            Integer globalBillId = (objects[14] != null) ? Integer.parseInt(objects[14].toString()) : null;
+//            Integer departmentId = (objects[15] != null) ? Integer.parseInt(objects[15].toString()) : null;
+//            Integer beneficiaryId = (objects[16] != null) ? Integer.parseInt(objects[16].toString()) : null;
+//            Integer patientBillId = (objects[17] != null) ? Integer.parseInt(objects[17].toString()) : null;
+//            Integer insuranceBillId = (objects[18] != null) ? Integer.parseInt(objects[18].toString()) : null;
+//            Integer thirdPartyBillId = (objects[19] != null) ? Integer.parseInt(objects[19].toString()) : null;
+//            Integer admissionId = (objects[20] != null) ? Integer.parseInt(objects[20].toString()) : null;
+//            Integer insuranceId = (objects[21] != null) ? Integer.parseInt(objects[21].toString()) : null;
+//            Integer billIdentifier = (objects[22] != null) ? Integer.parseInt(objects[22].toString()) : null;
+//            Double globalAmount = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//            Date closingDate = null;
+//            try {
+//                closingDate = (objects[24] != null) ? dateFormat.parse(objects[24].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            Integer closed = (objects[25] != null) ? Integer.parseInt(objects[25].toString()) : null;
+//            Integer closedBy = (objects[26] != null) ? Integer.parseInt(objects[26].toString()) : null;
+//            String closedReason = (objects[27] != null) ? objects[27].toString() : null;
+//            Integer edited_by = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String edit_reason = (objects[29] != null) ? objects[29].toString() : null;
+//            Date globalBillCreationDate = null;
+//            try {
+//                globalBillCreationDate = (objects[30] != null) ? dateFormat.parse(objects[30].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            String department_name = (objects[11] != null) ? objects[11].toString() : null;
+//            Integer facility_service_price_id = (objects[12] != null) ? Integer.parseInt(objects[12].toString()) : null;
+//            Integer service_category_id = (objects[13] != null) ? Integer.parseInt(objects[13].toString()) : null;
+//            Double maxima_to_pay = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//            Date start_date = null;
+//            try {
+//                start_date = (objects[30] != null) ? dateFormat.parse(objects[30].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            Date end_date = null;
+//            try {
+//                end_date = (objects[30] != null) ? dateFormat.parse(objects[30].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            Integer beneficary_patient_id = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String insurance_policy_id = (objects[29] != null) ? objects[29].toString() : null;
+//            String policy_id_number = (objects[29] != null) ? objects[29].toString() : null;
+//            Integer creator = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String owner_name = (objects[29] != null) ? objects[29].toString() : null;
+//            String owner_code = (objects[29] != null) ? objects[29].toString() : null;
+//            Integer level = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String company = (objects[29] != null) ? objects[29].toString() : null;
+//
+//            Double patient_bill_amount = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//            Integer is_patient_bill_paid = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String status = (objects[29] != null) ? objects[29].toString() : null;
+//            Double insurance_bill_amount = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//            Double third_party_bill_amount = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//
+//            Integer third_party_id = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            String insurance_card_no = (objects[29] != null) ? objects[29].toString() : null;
+//            Integer insurance_policy_owner = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//
+//            Date coverage_start_date = null;
+//            try {
+//                coverage_start_date = (objects[30] != null) ? dateFormat.parse(objects[30].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            Date expiration_date = null;
+//            try {
+//                expiration_date = (objects[30] != null) ? dateFormat.parse(objects[30].toString()) : null;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            String insurance_company_concept = (objects[29] != null) ? objects[29].toString() : null;
+//            String insurance_category = (objects[29] != null) ? objects[29].toString() : null;
+//            String insurance_company_name = (objects[29] != null) ? objects[29].toString() : null;
+//            String insurance_company_address = (objects[29] != null) ? objects[29].toString() : null;
+//            Integer insurance_company_phone = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//            Integer owner_patient_id = (objects[28] != null) ? Integer.parseInt(objects[28].toString()) : null;
+//
+//            String third_party_name = (objects[29] != null) ? objects[29].toString() : null;
+//Double third_party_rate = (objects[23] != null) ? Double.parseDouble(objects[23].toString()) : null;
+//
+//
+//            GlobalBill globalBill = new GlobalBill();
+//            globalBill.setGlobalBillId();
+//        }
 //    }
 
     @Override

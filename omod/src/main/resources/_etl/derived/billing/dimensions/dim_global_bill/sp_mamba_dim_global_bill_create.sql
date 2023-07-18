@@ -28,4 +28,7 @@ CREATE INDEX mamba_dim_global_bill_admission_id_index
 CREATE INDEX mamba_dim_global_bill_insurance_id_index
     ON mamba_dim_global_bill (insurance_id);
 
+CREATE INDEX mamba_dim_global_bill_closed_index
+    ON mamba_dim_global_bill (closed);
+
 -- $END

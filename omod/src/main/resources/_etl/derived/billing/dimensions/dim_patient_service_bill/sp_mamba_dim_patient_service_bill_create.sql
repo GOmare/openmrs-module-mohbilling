@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS mamba_dim_patient_service_bill
     service_other             varchar(100)   null,
     service_other_description varchar(250)   null,
     is_paid                   smallint       not null,
-    drug_frequency            varchar(150)   null,
+    drug_frequency            varchar(255)   null,
     item_type                 tinyint(1)     null,
     voided                    smallint       not null,
     created_date              datetime       null,
