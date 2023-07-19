@@ -1,121 +1,19 @@
 -- $BEGIN
 
 INSERT INTO mamba_fact_insurance
-    (SELECT
-
-         -- PATIENT_SERVICE_BILL
-         psb.patient_service_bill_id,
-         psb.consommation_id,
-         psb.billable_service_id,
-         psb.service_id,
-         psb.service_date,
-         psb.unit_price,
-         psb.quantity,
-         psb.paid_quantity,
-         psb.service_other,
-         psb.service_other_description,
-         psb.is_paid,
-         psb.drug_frequency,
-         psb.item_type,
-         psb.voided,
-
-         -- CONSOMMATION
-         cons.global_bill_id,
-         cons.department_id,
-         cons.beneficiary_id,
-         cons.patient_bill_id,
-         cons.insurance_bill_id,
-         cons.third_party_bill_id,
-
-         -- GLOBAL BILL
-         gb.admission_id,
-         gb.insurance_id,
-         gb.bill_identifier,
-         gb.global_amount,
-         gb.closing_date,
-         gb.closed,
-         gb.closed_by,
-         gb.closed_reason,
-         gb.edited_by,
-         gb.edit_reason,
-         gb.created_date         AS global_bill_creation_date,
-
-         -- DEPARTMENT
-         dep.name                AS department_name,
-
-         -- BILLABLE SERVICE
-         bls.facility_service_price_id,
-         bls.service_category_id,
-         bls.maxima_to_pay,
-         bls.start_date,
-         bls.end_date,
-
-         -- BENEFICIARY
-         ben.patient_id          AS beneficary_patient_id,
-         ben.insurance_policy_id,
-         ben.policy_id_number,
-         ben.creator,
-         ben.owner_name,
-         ben.owner_code,
-         ben.level,
-         ben.company,
-
-         -- PATIENT BILL
-         ptb.amount              AS patient_bill_amount,
-         ptb.is_paid             AS is_patient_bill_paid,
-         ptb.status,
-
-         -- INSURANCE BILL
-         isb.amount              AS insurance_bill_amount,
-
-         -- THIRD PARTY BILL
-         tpb.amount              AS third_party_bill_amount,
-
-         -- INSURANCE POLICY
-         isp.third_party_id,
-         isp.insurance_card_no,
-         isp.owner               AS insurance_policy_owner,
-         isp.coverage_start_date,
-         isp.expiration_date,
-
-         -- INSURANCE
-         ins.concept_id          AS insurance_company_concept,
-         ins.category            AS insurance_category,
-         ins.name                AS insurance_company_name,
-         ins.address             AS insurance_company_address,
-         ins.phone               AS insurance_company_phone,
-
-         -- OWNER PATIENT
-         per.person_id           AS owner_patient_id,
-
-         -- THIRD PARTY
-         tpt.name                AS third_party_name,
-         tpt.rate                AS third_party_rate,
-
-         -- SERVICE CATEGORY
-         sct.name                AS service_category_name,
-         sct.price               AS service_category_price,
-
-         -- FACILITY SERVICE PRICE
-         fsp.location_id         AS facility_location_id,
-         fsp.concept_id          AS facility_concept_id,
-         fsp.name                AS facility_name,
-         fsp.full_price          AS facility_full_price,
-
-         -- BENEFICIARY PATIENT
-         bps.person_id           AS beneficiary_patient_id,
-         psn.family_name         AS beneficiary_family_name,
-         psn.middle_name         AS beneficiary_middle_name,
-         psn.given_name          AS beneficiary_given_name,
-         bps.birthdate           AS beneficiary_birth_date,
-         bps.birthdate_estimated AS beneficiary_birth_date_estimated,
-         bps.gender              AS beneficiary_gender
-
-         -- BILL PAYMENT
-         -- bip.bill_payment_id,
-         -- bip.amount_paid,
-         -- bip.date_received,
-         -- bip.collector
+    (SELECT DATE_FORMAT(gb.created_date, '%d/%m/%Y') AS admission_date,
+            DATE_FORMAT(gb.closing_date, '%d/%m/%Y') AS closing_date,
+            per.person_name_long                     AS beneficiary_name,
+            ben.owner_name                           AS household_head_name,
+            ben.owner_code                           AS family_code,
+            ben.level                                AS level,
+            isp.insurance_card_no                    AS card_number,
+            ben.company                              AS company_name,
+            per.age                                  AS age,
+            DATE_FORMAT(per.birthdate, '%d/%m/%Y')   AS birth_date,
+            per.gender                               AS gender,
+            gb.closed_by_name                        AS doctor_name,
+            ins.name                                 as insurance_name
 
      FROM mamba_dim_patient_service_bill psb
               INNER JOIN mamba_dim_consommation cons ON psb.consommation_id = cons.consommation_id

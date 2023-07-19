@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS mamba_dim_insurance_rate
     start_date        date           not null,
     end_date          date           null,
     created_date      date           not null,
+    retired           smallint       not null,
+    retire_date       date           null,
 
     PRIMARY KEY (id)
 )
@@ -19,5 +21,8 @@ CREATE INDEX mamba_dim_insurance_rate_insurance_rate_id_index
 
 CREATE INDEX mamba_dim_insurance_rate_insurance_id_index
     ON mamba_dim_insurance_rate (insurance_id);
+
+CREATE INDEX mamba_dim_insurance_rate_insurance_retired_index
+    ON mamba_dim_insurance_rate (retired);
 
 -- $END

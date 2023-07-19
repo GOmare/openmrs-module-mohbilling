@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS mamba_dim_global_bill
     bill_identifier varchar(250) not null,
     global_amount   decimal      not null,
     closing_date    datetime     null,
-    closed          smallint     not null,
-    closed_by       int          null,
+    closed          TINYINT(1)     not null,
+    closed_by_id    int          null,
+    closed_by_name  varchar(255) null,
     closed_reason   varchar(150) null,
     edited_by       int          null,
     edit_reason     varchar(150) null,
@@ -30,5 +31,8 @@ CREATE INDEX mamba_dim_global_bill_insurance_id_index
 
 CREATE INDEX mamba_dim_global_bill_closed_index
     ON mamba_dim_global_bill (closed);
+
+CREATE INDEX mamba_dim_global_bill_closed_by_id_index
+    ON mamba_dim_global_bill (closed_by_id);
 
 -- $END
