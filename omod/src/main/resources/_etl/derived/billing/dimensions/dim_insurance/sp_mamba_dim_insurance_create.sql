@@ -1,5 +1,5 @@
 -- $BEGIN
-drop TABLE  mamba_dim_insurance
+CREATE TABLE  mamba_dim_insurance
 (
     id                              INT          NOT NULL AUTO_INCREMENT,
     insurance_id                    INT          NOT NULL,

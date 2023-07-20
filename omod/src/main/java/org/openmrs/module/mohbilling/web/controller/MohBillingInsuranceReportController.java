@@ -199,6 +199,8 @@ public class MohBillingInsuranceReportController extends
 
                 if (startDate != null && endDate != null) {
 
+                    List<HopService> reportColumns = GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.insuranceReportColumns");//ok todo: take this out of loop
+
                     int countGlobalBill = 1;
                     for (GlobalBill aBill : globalBills) {
 
@@ -207,7 +209,6 @@ public class MohBillingInsuranceReportController extends
                         if (aBill.isClosed()) {
 
                             List<PatientServiceBill> patientServiceBills = ReportsUtil.getAllItemsByGlobalBill(aBill);
-                            List<HopService> reportColumns = GlobalPropertyConfig.getHospitalServiceByCategory("mohbilling.insuranceReportColumns");//ok
                             List<ServiceRevenue> serviceRevenueList = new ArrayList<ServiceRevenue>();
 
                             for (HopService hopService : reportColumns) {
